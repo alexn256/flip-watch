@@ -1,0 +1,112 @@
+body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+}
+
+.clock_face {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  border: 1px solid black;
+}
+
+.flip-card {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  width: 8rem;
+  height: auto;
+  perspective: 1000px;
+  margin-left: 0.3rem;
+  margin-right: 0.3rem;
+}
+
+.pair-cards {
+  display: flex;
+  border: 1px solid black;
+}
+
+.card {
+  width: 100%;
+  height: 7rem;
+  background-color: #212529;
+  border: 4px solid #ffffff;
+  border-radius: 1em;
+  text-align: center;
+  overflow: hidden;
+  color: #fdf0d5;
+}
+
+.back {
+  position: absolute;
+  z-index: -1;
+}
+
+.front {
+  z-index: 1;
+}
+
+.low .v {
+  display: block;
+  transform: translateY(-50%);
+}
+
+.v {
+  font-size: 200px;
+}
+
+.ss {
+
+}
+
+.mm {
+
+}
+
+.hh {
+
+}
+
+.page1 {
+  transform-origin: bottom;
+  animation-name: rotate1;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.page2 {
+  transform-origin: bottom;
+  animation-name: rotate2;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes rotate1 {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(-81.5deg);
+  }
+}
+
+@keyframes rotate2 {
+  0% {
+    transform: rotateX(-81.5deg);
+    z-index: 2;
+  }
+  100% {
+    transform: rotateX(-180.0deg);
+    z-index: 2;
+  }
+}
