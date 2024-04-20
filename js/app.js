@@ -4,9 +4,9 @@ const minutes = currentTime.getMinutes();
 const seconds = currentTime.getSeconds();
 console.log(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
 
-let x = document.querySelector('#ss-up');
-let xx = document.querySelector('#s-up');
 let secPairCards = document.querySelector('#seconds');
+let minPairCards = document.querySelector('#minutes');
+let hourPairCards = document.querySelector('#hours');
 let sec = document.querySelector("#o-s");
 let secC = document.querySelector("#s-o");
 
@@ -48,9 +48,7 @@ class FlipCard {
     }
 
     singleFlipPostActions() {
-        this.upCard.classList.remove(this.page1, this.page2);
-        this.upValue.style.transform = 'translateY(0%)';
-        this.upValue.style.transform = 'rotateX(0deg)';
+        this.upValue.style = '';
         this.lowValue.innerHTML = nextNum(this.n, this.maxN);
     }
 }
@@ -79,20 +77,18 @@ const initPairCards = (pairCards, numValue) => {
  * initialization.
  */
 initPairCards(secPairCards, seconds);
+initPairCards(minPairCards, minutes);
+initPairCards(hourPairCards, hours);
 const secFlipCard = new FlipCard(sec, 'page1', 'page2');
 const seccFlipCard = new FlipCard(secC, 'page11', 'page22', 5);
 seccFlipCard.isPage1 = false;
 
-x.addEventListener('click', () => {
-    x.classList.add('page1');
+
+window.addEventListener('load', () => {
+    secFlipCard.upCard.classList.add('page1');
 });
 
-xx.addEventListener('click', () => {
-    xx.classList.add('page11');
-});
-
-
-x.addEventListener('animationiteration', () => {
+window.addEventListener('animationiteration', () => {
     secFlipCard.flip();
     if (secFlipCard.isPage1 && secFlipCard.n + 1 === 9) {
         console.log('1');
@@ -100,7 +96,7 @@ x.addEventListener('animationiteration', () => {
     }
 });
 
-xx.addEventListener('animationend', () => {
+window.addEventListener('animationend', () => {
     if (seccFlipCard.isPage1) {
         seccFlipCard.flip();
     } else {

@@ -16,7 +16,8 @@ body {
   height: auto;
   display: flex;
   justify-content: center;
-  border: 1px solid black;
+  color: #f6f4d2;
+  background-color: #343a40;
 }
 
 .flip-card {
@@ -30,9 +31,12 @@ body {
   margin-right: 0.3rem;
 }
 
+#seconds {
+  color: #9e2a2b;
+}
+
 .pair-cards {
   display: flex;
-  border: 1px solid black;
 }
 
 .card {
@@ -44,7 +48,6 @@ body {
   border-radius: 1em;
   text-align: center;
   overflow: hidden;
-  color: #9e2a2b;
 }
 
 .back {
@@ -63,6 +66,17 @@ body {
 
 .v {
   font-size: 200px;
+}
+
+.delim {
+  display: flex;
+  align-items: center;
+}
+
+.delim div {
+  width: 20px;
+  height: 50%;
+  background-color: #212529;
 }
 
 .page1 {
