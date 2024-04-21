@@ -43,8 +43,8 @@ body {
   width: 100%;
   height: 7rem;
   background-color: #212529;
-  border-bottom: 2px solid #ffffff;
-  border-top: 2px solid #ffffff;
+  border-bottom: 0.3rem solid #343a40;
+  border-top: 0.3rem solid #343a40;
   border-radius: 1em;
   text-align: center;
   overflow: hidden;
@@ -61,7 +61,7 @@ body {
 
 .low .v {
   display: block;
-  transform: translateY(-50%);
+  transform: translateY(-52%);
 }
 
 .v {
@@ -76,6 +76,7 @@ body {
 .delim div {
   width: 20px;
   height: 50%;
+  border-radius: 1rem;
   background-color: #212529;
 }
 

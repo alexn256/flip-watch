@@ -11,7 +11,7 @@ let sec = document.querySelector("#o-s");
 let secC = document.querySelector("#s-o");
 
 class FlipCard {
-    constructor(element, page1, page2, maxN = 9) {
+    constructor(element, page1, page2, maxN = 5) {
         this.element = element;
         this.isPage1 = true;
         this.page1 = page1;
@@ -29,7 +29,6 @@ class FlipCard {
         if (this.isPage1) {
             this.upCard.classList.remove(this.page1);
             this.upValue.style.display = 'block';
-            this.upValue.style.transform = 'translateY(-50%)';
             this.upValue.style.transform = 'rotateX(-180deg)';
             this.upCard.classList.add(this.page2);
             this.isPage1 = false;
@@ -38,7 +37,6 @@ class FlipCard {
             this.lowValue.innerHTML = this.n;
         } else {
             this.upCard.classList.remove(this.page2);
-            this.upValue.style.transform = 'translateY(0%)';
             this.upValue.style.transform = 'rotateX(0deg)';
             this.upCard.classList.add(this.page1);
             this.isPage1 = true;
@@ -79,8 +77,8 @@ const initPairCards = (pairCards, numValue) => {
 initPairCards(secPairCards, seconds);
 initPairCards(minPairCards, minutes);
 initPairCards(hourPairCards, hours);
-const secFlipCard = new FlipCard(sec, 'page1', 'page2');
-const seccFlipCard = new FlipCard(secC, 'page11', 'page22', 5);
+const secFlipCard = new FlipCard(sec, 'page1', 'page2', 9);
+const seccFlipCard = new FlipCard(secC, 'page11', 'page22');
 seccFlipCard.isPage1 = false;
 
 
@@ -91,7 +89,6 @@ window.addEventListener('load', () => {
 window.addEventListener('animationiteration', () => {
     secFlipCard.flip();
     if (secFlipCard.isPage1 && secFlipCard.n + 1 === 9) {
-        console.log('1');
         seccFlipCard.flip();
     }
 });
