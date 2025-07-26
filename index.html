@@ -4,89 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Beautiful animated flip clock showing current time">
     <link rel="icon" type="image/x-icon" href="/icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
     <title>Flip Watch</title>
 </head>
-<body>
+<body style="opacity: 0; transition: opacity 0.5s ease-in;">
 <div class="clock_face">
     <div id="hours" class="pair-cards">
         <div id="h-o" class="flip-card">
-            <div id="h-back" class="back card">
+            <div class="back card">
                 <span class="v"></span>
             </div>
-            <div id="h-up" class="up card front">
+            <div class="up card front">
                 <span class="v"></span>
             </div>
-            <div id="h-low" class="low card front">
+            <div class="low card front">
                 <span class="v"></span>
             </div>
         </div>
         <div id="o-h" class="flip-card">
-            <div id="hh-back" class="back card">
+            <div class="back card">
                 <span class="v"></span>
             </div>
-            <div id="hh-up" class="up card front">
+            <div class="up card front">
                 <span class="v"></span>
             </div>
-            <div id="hh-low" class="low card front">
+            <div class="low card front">
                 <span class="v"></span>
             </div>
         </div>
     </div>
     <div class="delim">
+        <div></div>
         <div></div>
     </div>
     <div id="minutes" class="pair-cards">
         <div id="m-o" class="flip-card">
-            <div id="m-back" class="back card">
+            <div class="back card">
                 <span class="v"></span>
             </div>
-            <div id="m-up" class="up card front">
+            <div class="up card front">
                 <span class="v"></span>
             </div>
-            <div id="m-low" class="low card front">
+            <div class="low card front">
                 <span class="v"></span>
             </div>
         </div>
         <div id="o-m" class="flip-card">
-            <div id="mm-back" class="back card">
+            <div class="back card">
                 <span class="v"></span>
             </div>
-            <div id="mm-up" class="up card front">
+            <div class="up card front">
                 <span class="v"></span>
             </div>
-            <div id="mm-low" class="low card front">
+            <div class="low card front">
                 <span class="v"></span>
             </div>
         </div>
     </div>
     <div class="delim">
         <div></div>
+        <div></div>
     </div>
     <div id="seconds" class="pair-cards">
         <div id="s-o" class="flip-card">
-            <div id="s-back" class="back card">
+            <div class="back card">
                 <span class="v"></span>
             </div>
-            <div id="s-up" class="up card front">
+            <div class="up card front">
                 <span class="v"></span>
             </div>
-            <div id="s-low" class="low card front">
+            <div class="low card front">
                 <span class="v"></span>
             </div>
         </div>
         <div id="o-s" class="flip-card">
-            <div id="ss-back" class="back card">
+            <div class="back card">
                 <span class="v"></span>
             </div>
-            <div id="ss-up" class="up card front">
+            <div class="up card front">
                 <span class="v"></span>
             </div>
-            <div id="ss-low" class="low card front">
+            <div class="low card front">
                 <span class="v"></span>
             </div>
         </div>

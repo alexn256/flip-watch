@@ -1,160 +1,244 @@
-const currentTime = new Date();
-const hours = currentTime.getHours();
-const minutes = currentTime.getMinutes();
-const seconds = currentTime.getSeconds();
-console.log(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+class FlipWatch {
+    constructor() {
+        this.initializeElements();
+        this.initializeCards();
+        this.startClock();
+    }
 
-const secPairCards = document.querySelector('#seconds');
-const minPairCards = document.querySelector('#minutes');
-const hourPairCards = document.querySelector('#hours');
-const sec = document.querySelector("#o-s");
-const secs = document.querySelector("#s-o");
-const min = document.querySelector("#o-m");
-const mins = document.querySelector("#m-o");
-const hr = document.querySelector("#o-h");
-const hrs = document.querySelector("#h-o");
+    initializeElements() {
+        this.elements = {
+            seconds: {
+                container: document.querySelector('#seconds'),
+                tens: document.querySelector("#s-o"),
+                ones: document.querySelector("#o-s")
+            },
+            minutes: {
+                container: document.querySelector('#minutes'),
+                tens: document.querySelector("#m-o"),
+                ones: document.querySelector("#o-m")
+            },
+            hours: {
+                container: document.querySelector('#hours'),
+                tens: document.querySelector("#h-o"),
+                ones: document.querySelector("#o-h")
+            }
+        };
+    }
+
+    initializeCards() {
+        const currentTime = new Date();
+        const hours = currentTime.getHours();
+        const minutes = currentTime.getMinutes();
+        const seconds = currentTime.getSeconds();
+
+        // Initialize display values
+        this.initializePairCards(this.elements.seconds, seconds);
+        this.initializePairCards(this.elements.minutes, minutes);
+        this.initializePairCards(this.elements.hours, hours);
+
+        // Create flip card instances
+        this.flipCards = {
+            secondsOnes: new FlipCard(this.elements.seconds.ones, 'sec-state-1', 'sec-state-2', 9),
+            secondsTens: new FlipCard(this.elements.seconds.tens, 'state-1', 'state-2', 5),
+            minutesOnes: new FlipCard(this.elements.minutes.ones, 'state-1', 'state-2', 9),
+            minutesTens: new FlipCard(this.elements.minutes.tens, 'state-1', 'state-2', 5),
+            hoursOnes: new FlipCard(this.elements.hours.ones, 'state-1', 'state-2', 9),
+            hoursTens: new FlipCard(this.elements.hours.tens, 'state-1', 'state-2', 2)
+        };
+    }
+
+    initializePairCards(pairElements, timeValue) {
+        const onesValue = timeValue % 10;
+        const tensValue = Math.floor(timeValue / 10);
+        
+        this.initializeCard(pairElements.ones, onesValue);
+        this.initializeCard(pairElements.tens, tensValue);
+    }
+
+    initializeCard(cardElement, value) {
+        const upValue = cardElement.querySelector('.up .v');
+        const lowValue = cardElement.querySelector('.low .v');
+        const backValue = cardElement.querySelector('.back .v');
+        
+        upValue.textContent = value;
+        lowValue.textContent = value;
+        backValue.textContent = this.getNextValue(value, this.getMaxValue(cardElement));
+    }
+
+    getMaxValue(cardElement) {
+        const id = cardElement.id;
+        if (id.includes('s-o') || id.includes('m-o') || id.includes('h-o')) return 5;
+        if (id.includes('h-')) return 2;
+        return 9;
+    }
+
+    getNextValue(current, max) {
+        return current >= max ? 0 : current + 1;
+    }
+
+    startClock() {
+        // Start the seconds animation
+        this.flipCards.secondsOnes.startAnimation();
+        
+        // Set up the cascade timing
+        this.setupCascadeEvents();
+        
+        // Update time every second to stay synchronized
+        setInterval(() => {
+            this.synchronizeTime();
+        }, 60000); // Check every minute for synchronization
+    }
+
+    setupCascadeEvents() {
+        // Seconds ones triggers seconds tens
+        this.elements.seconds.ones.addEventListener('animationiteration', () => {
+            this.flipCards.secondsOnes.flip();
+            
+            const currentValue = parseInt(this.flipCards.secondsOnes.getCurrentValue());
+            if (currentValue === 9) {
+                this.flipCards.secondsTens.flip();
+            }
+        });
+
+        // Seconds tens triggers minutes ones
+        this.elements.seconds.tens.addEventListener('animationend', () => {
+            this.flipCards.secondsTens.handleAnimationEnd();
+            
+            if (this.flipCards.secondsTens.shouldTriggerNext()) {
+                this.flipCards.minutesOnes.flip();
+            }
+        });
+
+        // Minutes ones triggers minutes tens
+        this.elements.minutes.ones.addEventListener('animationend', () => {
+            this.flipCards.minutesOnes.handleAnimationEnd();
+            
+            if (this.flipCards.minutesOnes.shouldTriggerNext()) {
+                this.flipCards.minutesTens.flip();
+            }
+        });
+
+        // Minutes tens triggers hours ones
+        this.elements.minutes.tens.addEventListener('animationend', () => {
+            this.flipCards.minutesTens.handleAnimationEnd();
+            
+            if (this.flipCards.minutesTens.shouldTriggerNext()) {
+                this.flipCards.hoursOnes.flip();
+            }
+        });
+
+        // Hours ones triggers hours tens
+        this.elements.hours.ones.addEventListener('animationend', () => {
+            // Adjust max value for hours based on tens digit
+            const hoursTensValue = parseInt(this.flipCards.hoursTens.getCurrentValue());
+            this.flipCards.hoursOnes.maxValue = hoursTensValue >= 2 ? 3 : 9;
+            
+            this.flipCards.hoursOnes.handleAnimationEnd();
+            
+            if (this.flipCards.hoursOnes.shouldTriggerNext()) {
+                this.flipCards.hoursTens.flip();
+            }
+        });
+
+        // Hours tens completes the cycle
+        this.elements.hours.tens.addEventListener('animationend', () => {
+            this.flipCards.hoursTens.handleAnimationEnd();
+        });
+    }
+
+    synchronizeTime() {
+        const currentTime = new Date();
+        const hours = currentTime.getHours();
+        const minutes = currentTime.getMinutes();
+        const seconds = currentTime.getSeconds();
+
+        // Only synchronize if we're significantly off
+        if (seconds === 0 && minutes === 0) {
+            this.resynchronize(hours, minutes, seconds);
+        }
+    }
+
+    resynchronize(hours, minutes, seconds) {
+        // Update all displays to current time
+        this.initializePairCards(this.elements.seconds, seconds);
+        this.initializePairCards(this.elements.minutes, minutes);
+        this.initializePairCards(this.elements.hours, hours);
+    }
+}
 
 class FlipCard {
-    constructor(element, page1, page2, maxN = 5, isState1 = true) {
+    constructor(element, state1Class, state2Class, maxValue, startInState1 = true) {
         this.element = element;
-        this.isState1 = isState1;
-        this.page1 = page1;
-        this.page2 = page2;
-        this.maxN = maxN;
-        this.upValue = this.element.querySelector('.up .v');
-        this.lowValue = this.element.querySelector('.low .v');
-        this.backValue = this.element.querySelector('.back .v');
-        this.upCard = this.element.querySelector('.up');
-        this.n = Number.parseInt(this.upValue.innerHTML);
+        this.state1Class = state1Class;
+        this.state2Class = state2Class;
+        this.maxValue = maxValue;
+        this.isInState1 = startInState1;
+        
+        this.upCard = element.querySelector('.up');
+        this.upValue = element.querySelector('.up .v');
+        this.lowValue = element.querySelector('.low .v');
+        this.backValue = element.querySelector('.back .v');
+        
+        this.currentValue = parseInt(this.upValue.textContent) || 0;
+    }
+
+    startAnimation() {
+        this.upCard.classList.add(this.state1Class);
     }
 
     flip() {
-        this.lowValue.innerHTML = Number.parseInt(this.upValue.innerHTML);
-        if (this.isState1) {
-            this.upCard.classList.remove(this.page1);
-            this.upValue.style.display = 'block';
-            this.upValue.style.transform = 'rotateX(-180deg)';
-            this.upCard.classList.add(this.page2);
-            this.isState1 = false;
-            this.n = Number.parseInt(this.upValue.innerHTML);
-            this.upValue.innerHTML = nextNum(this.n, this.maxN);
-            this.lowValue.innerHTML = this.n;
+        this.lowValue.textContent = this.upValue.textContent;
+        
+        if (this.isInState1) {
+            this.upCard.classList.remove(this.state1Class);
+            this.upCard.classList.add(this.state2Class);
+            this.isInState1 = false;
+            
+            this.currentValue = parseInt(this.upValue.textContent);
+            this.upValue.textContent = this.getNextValue();
+            this.lowValue.textContent = this.currentValue;
         } else {
-            this.upCard.classList.remove(this.page2);
-            this.upValue.style.transform = 'rotateX(0deg)';
-            this.upCard.classList.add(this.page1);
-            this.isState1 = true;
-            const backVal = Number.parseInt(this.upValue.innerHTML);
-            this.backValue.innerHTML = nextNum(backVal, this.maxN);
+            this.upCard.classList.remove(this.state2Class);
+            this.upCard.classList.add(this.state1Class);
+            this.isInState1 = true;
+            
+            const backValue = parseInt(this.upValue.textContent);
+            this.backValue.textContent = this.getNextValue(backValue);
         }
     }
 
-    singleFlipPostActions() {
-        this.upValue.style = '';
-        this.lowValue.innerHTML = nextNum(this.n, this.maxN);
+    handleAnimationEnd() {
+        if (!this.isInState1) {
+            this.flip();
+        } else {
+            this.postFlipCleanup();
+        }
+    }
+
+    postFlipCleanup() {
+        this.lowValue.textContent = this.getNextValue(this.currentValue);
+    }
+
+    shouldTriggerNext() {
+        return !this.isInState1 && (this.currentValue + 1) > this.maxValue;
+    }
+
+    getCurrentValue() {
+        return this.upValue.textContent;
+    }
+
+    getNextValue(value = this.currentValue) {
+        return value >= this.maxValue ? 0 : value + 1;
     }
 }
 
-const nextNum = (n, maxN = 9) => {
-    return n + 1 > maxN ? 0 : n + 1;
-}
+// Initialize the flip watch when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new FlipWatch();
+});
 
-const initCard = (card, n) => {
-    let upValue = card.querySelector('.up .v');
-    upValue.innerHTML = n;
-    let lowValue = card.querySelector('.low .v');
-    lowValue.innerHTML = n;
-    let backValue = card.querySelector('.back .v');
-    backValue.innerHTML = nextNum(n);
-}
-
-const initPairCards = (pairCards, numValue) => {
-    const rCard = pairCards.querySelector('[id^="o-"]');
-    initCard(rCard, numValue % 10);
-    const lCard = pairCards.querySelector('[id$="-o"]');
-    initCard(lCard, Math.floor(numValue / 10));
-}
-
-/**
- * initialization.
- */
-initPairCards(secPairCards, seconds);
-initPairCards(minPairCards, minutes);
-initPairCards(hourPairCards, hours);
-const secFlipCard = new FlipCard(sec, 'sec-state-1', 'sec-state-2', 9);
-const secsFlipCard = new FlipCard(secs, 'state-1', 'state-2', 5, false);
-const minFlipCard = new FlipCard(min, 'state-1', 'state-2', 9);
-const minsFslipCard = new FlipCard(mins, 'state-1', 'state-2', 5, false);
-const hrFlipCard = new FlipCard(hr, 'state-1', 'state-2', 9, false);
-const hrsFlipCard = new FlipCard(hrs, 'state-1', 'state-2', 2, false);
-
+// Add some visual feedback for loading
 window.addEventListener('load', () => {
-    secFlipCard.upCard.classList.add('sec-state-1');
-});
-
-window.addEventListener('animationiteration', () => {
-    secFlipCard.flip();
-    if (secFlipCard.isState1 && secFlipCard.n + 1 === 9) {
-        secsFlipCard.flip();
-    }
-});
-
-secs.addEventListener('animationend', () => {
-    if (secsFlipCard.isState1) {
-        secsFlipCard.flip();
-        if (!secsFlipCard.isState1 && secsFlipCard.n + 1 === secsFlipCard.maxN + 1) {
-            minFlipCard.flip();
-        }
-    } else {
-        secsFlipCard.singleFlipPostActions();
-    }
-});
-
-min.addEventListener('animationend', () => {
-    if (hrsFlipCard.n > 1) {
-        hrFlipCard.maxN = 3;
-    } else {
-        hrFlipCard.maxN = 9;
-    }
-    if (minFlipCard.isState1) {
-        minFlipCard.flip();
-        if (!minFlipCard.isState1 && minFlipCard.n + 1 === minFlipCard.maxN + 1) {
-            minsFslipCard.flip();
-        }
-    } else {
-        minFlipCard.singleFlipPostActions();
-    }
-});
-
-mins.addEventListener('animationend', () => {
-    if (minsFslipCard.isState1) {
-        minsFslipCard.flip();
-        if (!minsFslipCard.isState1 && minsFslipCard.n + 1 === minsFslipCard.maxN + 1) {
-            hrFlipCard.flip();
-        }
-    } else {
-        minsFslipCard.singleFlipPostActions();
-    }
-});
-
-hr.addEventListener('animationend', () => {
-    if (hrFlipCard.isState1) {
-        hrFlipCard.flip();
-        if (!hrFlipCard.isState1 && hrFlipCard.n + 1 === hrFlipCard.maxN + 1) {
-            hrsFlipCard.flip();
-        }
-    } else {
-        hrFlipCard.singleFlipPostActions();
-    }
-});
-
-hrs.addEventListener('animationend', () => {
-    if (hrsFlipCard.isState1) {
-        hrsFlipCard.flip();
-        if (!hrsFlipCard.isState1 && hrsFlipCard.n + 1 === hrsFlipCard.maxN + 1) {
-        }
-    } else {
-        hrsFlipCard.singleFlipPostActions();
-        hrsFlipCard.n = nextNum(hrsFlipCard.n, hrsFlipCard.maxN);
-    }
+    document.body.style.opacity = '1';
+    console.log('Flip Watch initialized successfully!');
 });
