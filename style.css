@@ -11,32 +11,71 @@ body {
     font-style: normal;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.8s ease-in;
+}
+
+body.loaded {
+    opacity: 1;
 }
 
 .clock_face {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
-    padding: 3rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 2rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    gap: 2.5rem;
+    padding: 3.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 2.5rem;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    animation: slideIn 1s ease-out;
+    position: relative;
+}
+
+.clock_face::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        rgba(255, 255, 255, 0.3) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0.3) 100%);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .pair-cards {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.8rem;
+    position: relative;
 }
 
 .flip-card {
     display: flex;
     flex-direction: column;
     background-color: transparent;
-    width: 6rem;
-    height: 8rem;
+    width: 7rem;
+    height: 9rem;
     perspective: 1000px;
     position: relative;
 }
@@ -44,18 +83,20 @@ body {
 .card {
     width: 100%;
     height: 100%;
-    background: linear-gradient(145deg, #2c3e50, #34495e);
+    background: linear-gradient(145deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
     border: 2px solid #34495e;
-    border-radius: 0.8rem;
+    border-radius: 1rem;
     text-align: center;
     overflow: hidden;
     position: relative;
     box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card::before {
@@ -66,11 +107,27 @@ body {
     right: 0;
     bottom: 0;
     background: linear-gradient(180deg, 
-        rgba(255, 255, 255, 0.1) 0%, 
-        rgba(255, 255, 255, 0.05) 50%, 
-        rgba(0, 0, 0, 0.1) 100%);
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.05) 30%,
+        rgba(0, 0, 0, 0.05) 70%, 
+        rgba(0, 0, 0, 0.15) 100%);
     border-radius: inherit;
     pointer-events: none;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 0, 0, 0.3) 20%, 
+        rgba(0, 0, 0, 0.3) 80%, 
+        transparent 100%);
+    transform: translateY(-0.5px);
 }
 
 .back {
@@ -101,25 +158,38 @@ body {
 }
 
 .v {
-    font-size: 4rem;
+    font-size: 4.5rem;
     color: #ecf0f1;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 
+        0 3px 6px rgba(0, 0, 0, 0.6),
+        0 1px 0 rgba(255, 255, 255, 0.1);
     font-weight: 900;
     line-height: 1;
     position: relative;
     z-index: 2;
+    letter-spacing: -0.05em;
 }
 
-#seconds .v {
-    color: #e74c3c;
+/* Color coding for different time units */
+#hours .v {
+    color: #3498db;
+    text-shadow: 
+        0 3px 6px rgba(52, 152, 219, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 #minutes .v {
     color: #f39c12;
+    text-shadow: 
+        0 3px 6px rgba(243, 156, 18, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-#hours .v {
-    color: #3498db;
+#seconds .v {
+    color: #e74c3c;
+    text-shadow: 
+        0 3px 6px rgba(231, 76, 60, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .delim {
@@ -127,18 +197,19 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    height: 8rem;
+    gap: 1.5rem;
+    height: 9rem;
 }
 
 .delim div {
-    width: 0.8rem;
-    height: 0.8rem;
+    width: 1rem;
+    height: 1rem;
     border-radius: 50%;
     background: linear-gradient(145deg, #ecf0f1, #bdc3c7);
     box-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 2px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
     animation: pulse 2s ease-in-out infinite;
 }
 
@@ -146,41 +217,40 @@ body {
     0%, 100% {
         opacity: 1;
         transform: scale(1);
+        box-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.3),
+            inset 0 2px 0 rgba(255, 255, 255, 0.6),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.2);
     }
     50% {
-        opacity: 0.6;
-        transform: scale(0.8);
+        opacity: 0.7;
+        transform: scale(0.85);
+        box-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.1);
     }
 }
 
+/* Animation states */
 .sec-state-1 {
     transform-origin: bottom;
-    animation-name: flip-down;
-    animation-duration: 0.6s;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
+    animation: flip-down 0.6s ease-in-out infinite;
 }
 
 .sec-state-2 {
     transform-origin: bottom;
-    animation-name: flip-up;
-    animation-duration: 0.6s;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
+    animation: flip-up 0.6s ease-in-out infinite;
 }
 
 .state-1 {
     transform-origin: bottom;
-    animation-name: flip-down;
-    animation-duration: 0.6s;
-    animation-timing-function: ease-in-out;
+    animation: flip-down 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .state-2 {
     transform-origin: bottom;
-    animation-name: flip-up;
-    animation-duration: 0.6s;
-    animation-timing-function: ease-in-out;
+    animation: flip-up 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes flip-down {
@@ -189,6 +259,7 @@ body {
     }
     50% {
         transform: rotateX(-90deg);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
     }
     100% {
         transform: rotateX(-90deg);
@@ -201,72 +272,114 @@ body {
     }
     50% {
         transform: rotateX(-90deg);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
     }
     100% {
         transform: rotateX(-180deg);
     }
 }
 
+/* Hover effects */
+.flip-card:hover .card {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 24px rgba(0, 0, 0, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .clock_face {
-        gap: 1rem;
-        padding: 2rem;
+        gap: 1.5rem;
+        padding: 2.5rem;
         margin: 1rem;
+        border-radius: 2rem;
     }
     
     .flip-card {
-        width: 4rem;
-        height: 6rem;
+        width: 5rem;
+        height: 7rem;
     }
     
     .v {
-        font-size: 2.5rem;
+        font-size: 3rem;
     }
     
     .delim div {
-        width: 0.6rem;
-        height: 0.6rem;
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+    
+    .delim {
+        gap: 1rem;
+        height: 7rem;
     }
 }
 
 @media (max-width: 480px) {
     .clock_face {
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 2rem;
+        padding: 2rem;
+    }
+    
+    .pair-cards {
+        gap: 0.6rem;
     }
     
     .flip-card {
-        width: 3rem;
-        height: 4rem;
+        width: 4rem;
+        height: 5.5rem;
     }
     
     .v {
-        font-size: 2rem;
+        font-size: 2.5rem;
+    }
+    
+    .delim {
+        flex-direction: row;
+        gap: 1rem;
+        height: auto;
+        width: 100%;
+        justify-content: center;
     }
 }
 
-/* Add hover effects for interactivity */
-.flip-card:hover .card {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 8px 16px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
+/* Performance optimizations */
+.flip-card {
+    will-change: transform;
 }
 
-/* Loading animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+.card {
+    will-change: transform, box-shadow;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    .sec-state-1,
+    .sec-state-2,
+    .state-1,
+    .state-2 {
+        animation-duration: 0.1s;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    
+    .delim div {
+        animation: none;
+    }
+    
+    body {
+        transition: none;
+    }
+    
+    .clock_face {
+        animation: none;
     }
 }
 
-.clock_face {
-    animation: fadeIn 1s ease-out;
+/* Focus states for accessibility */
+.flip-card:focus-within {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 4px;
+    border-radius: 1rem;
 }
