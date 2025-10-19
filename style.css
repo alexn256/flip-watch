@@ -4,21 +4,52 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
+    margin: 0;
+    padding: 0;
     display: flex;
     align-items: center;
+    justify-content: center;
     font-family: "Roboto", sans-serif;
     font-weight: 700;
     font-style: normal;
-    background-color: #343a40;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 20% 50%, rgba(94, 53, 177, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(29, 78, 216, 0.1) 0%, transparent 50%);
+    animation: backgroundShift 20s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+        transform: translate(-10%, -10%) rotate(5deg);
+    }
 }
 
 .clock_face {
-    transform: translateX(50%);
-    width: 50%;
-    height: auto;
+    position: relative;
+    z-index: 1;
     display: flex;
     justify-content: center;
+    align-items: center;
     color: #f6f4d2;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 2rem;
+    box-shadow:
+        0 8px 32px 0 rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .flip-card {
@@ -27,13 +58,42 @@ body {
     background-color: transparent;
     width: 8rem;
     height: auto;
-    perspective: 1000px;
-    margin-left: 0.3rem;
-    margin-right: 0.3rem;
+    perspective: 1200px;
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+    transition: transform 0.2s ease;
+}
+
+.flip-card:hover {
+    transform: scale(1.02);
 }
 
 #seconds {
-    color: #9e2a2b;
+    color: #ff6b6b;
+}
+
+#seconds .card {
+    background: linear-gradient(135deg, #2d1517 0%, #1a0a0b 100%);
+    border-color: #3d1f22;
+    box-shadow:
+        0 4px 15px rgba(255, 107, 107, 0.15),
+        inset 0 1px 0 rgba(255, 107, 107, 0.1);
+}
+
+#seconds .v {
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(255, 107, 107, 0.3),
+        0 0 40px rgba(255, 107, 107, 0.1);
+}
+
+#seconds .sec-state-1,
+#seconds .sec-state-2 {
+    box-shadow:
+        0 4px 20px rgba(255, 107, 107, 0.3),
+        0 0 30px rgba(255, 107, 107, 0.1),
+        inset 0 1px 0 rgba(255, 107, 107, 0.2);
 }
 
 .pair-cards {
@@ -43,12 +103,28 @@ body {
 .card {
     width: 100%;
     height: 7rem;
-    background-color: #212529;
-    border-bottom: 0.3rem solid #343a40;
-    border-top: 0.3rem solid #343a40;
-    border-radius: 1em;
+    background: linear-gradient(135deg, #2a2e35 0%, #1a1d23 100%);
+    border-bottom: 0.25rem solid rgba(0, 0, 0, 0.5);
+    border-top: 0.25rem solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.8rem;
     text-align: center;
     overflow: hidden;
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+    pointer-events: none;
 }
 
 .back {
@@ -67,18 +143,42 @@ body {
 
 .v {
     font-size: 12.5rem;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(246, 244, 210, 0.1);
+    position: relative;
 }
 
 .delim {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    gap: 1.5rem;
+    margin: 0 0.8rem;
 }
 
 .delim div {
-    width: 1.25rem;
-    height: 50%;
-    border-radius: 1rem;
-    background-color: #212529;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #3a3f47 0%, #1a1d23 100%);
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(0, 0, 0, 0.5),
+        inset 0 -1px 2px rgba(255, 255, 255, 0.1);
+    animation: delimPulse 2s ease-in-out infinite;
+}
+
+@keyframes delimPulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
 }
 
 .sec-state-1 {
@@ -86,7 +186,7 @@ body {
     animation-name: top-mid;
     animation-duration: 0.5s;
     animation-iteration-count: infinite;
-    animation-timing-function: linear;
+    animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
 .sec-state-2 {
@@ -94,21 +194,21 @@ body {
     animation-name: mid-bottom;
     animation-duration: 0.5s;
     animation-iteration-count: infinite;
-    animation-timing-function: linear;
+    animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
 .state-1 {
     transform-origin: bottom;
     animation-name: top-mid;
     animation-duration: 0.5s;
-    animation-timing-function: linear;
+    animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
 .state-2 {
     transform-origin: bottom;
     animation-name: mid-bottom;
     animation-duration: 0.5s;
-    animation-timing-function: linear;
+    animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
 @keyframes top-mid {
@@ -128,5 +228,130 @@ body {
     100% {
         transform: rotateX(-180.0deg);
         z-index: 2;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .clock_face {
+        padding: 1.5rem;
+    }
+
+    .flip-card {
+        width: 6.5rem;
+        margin-left: 0.3rem;
+        margin-right: 0.3rem;
+    }
+
+    .card {
+        height: 5.5rem;
+    }
+
+    .v {
+        font-size: 10rem;
+    }
+
+    .delim {
+        gap: 1.2rem;
+        margin: 0 0.6rem;
+    }
+
+    .delim div {
+        width: 1rem;
+        height: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .clock_face {
+        padding: 1rem;
+    }
+
+    .flip-card {
+        width: 5rem;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+    }
+
+    .card {
+        height: 4.2rem;
+        border-bottom: 0.2rem solid rgba(0, 0, 0, 0.5);
+        border-top: 0.2rem solid rgba(255, 255, 255, 0.05);
+    }
+
+    .v {
+        font-size: 7.5rem;
+    }
+
+    .delim {
+        gap: 1rem;
+        margin: 0 0.4rem;
+    }
+
+    .delim div {
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .clock_face {
+        padding: 0.8rem;
+        border-radius: 1.5rem;
+    }
+
+    .flip-card {
+        width: 3.8rem;
+        margin-left: 0.2rem;
+        margin-right: 0.2rem;
+    }
+
+    .card {
+        height: 3.2rem;
+        border-radius: 0.6rem;
+    }
+
+    .v {
+        font-size: 5.5rem;
+    }
+
+    .delim {
+        gap: 0.8rem;
+        margin: 0 0.3rem;
+    }
+
+    .delim div {
+        width: 0.6rem;
+        height: 0.6rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .clock_face {
+        padding: 0.5rem;
+    }
+
+    .flip-card {
+        width: 3rem;
+        margin-left: 0.15rem;
+        margin-right: 0.15rem;
+    }
+
+    .card {
+        height: 2.5rem;
+    }
+
+    .v {
+        font-size: 4.5rem;
+    }
+
+    .delim {
+        gap: 0.6rem;
+        margin: 0 0.2rem;
+    }
+
+    .delim div {
+        width: 0.5rem;
+        height: 0.5rem;
     }
 }
