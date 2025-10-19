@@ -75,6 +75,51 @@ const initPairCards = (pairCards, numValue) => {
     initCard(lCard, Math.floor(numValue / 10));
 }
 
+const syncTimeToSystem = () => {
+    const currentTime = new Date();
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    const seconds = currentTime.getSeconds();
+
+    console.log(`Syncing to system time: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+
+    // Update all cards to current time
+    initPairCards(secPairCards, seconds);
+    initPairCards(minPairCards, minutes);
+    initPairCards(hourPairCards, hours);
+
+    // Update FlipCard internal state
+    secFlipCard.n = seconds % 10;
+    secFlipCard.upValue.innerHTML = secFlipCard.n;
+    secFlipCard.lowValue.innerHTML = secFlipCard.n;
+    secFlipCard.backValue.innerHTML = nextNum(secFlipCard.n, secFlipCard.maxN);
+
+    secsFlipCard.n = Math.floor(seconds / 10);
+    secsFlipCard.upValue.innerHTML = secsFlipCard.n;
+    secsFlipCard.lowValue.innerHTML = secsFlipCard.n;
+    secsFlipCard.backValue.innerHTML = nextNum(secsFlipCard.n, secsFlipCard.maxN);
+
+    minFlipCard.n = minutes % 10;
+    minFlipCard.upValue.innerHTML = minFlipCard.n;
+    minFlipCard.lowValue.innerHTML = minFlipCard.n;
+    minFlipCard.backValue.innerHTML = nextNum(minFlipCard.n, minFlipCard.maxN);
+
+    minsFslipCard.n = Math.floor(minutes / 10);
+    minsFslipCard.upValue.innerHTML = minsFslipCard.n;
+    minsFslipCard.lowValue.innerHTML = minsFslipCard.n;
+    minsFslipCard.backValue.innerHTML = nextNum(minsFslipCard.n, minsFslipCard.maxN);
+
+    hrFlipCard.n = hours % 10;
+    hrFlipCard.upValue.innerHTML = hrFlipCard.n;
+    hrFlipCard.lowValue.innerHTML = hrFlipCard.n;
+    hrFlipCard.backValue.innerHTML = nextNum(hrFlipCard.n, hrFlipCard.maxN);
+
+    hrsFlipCard.n = Math.floor(hours / 10);
+    hrsFlipCard.upValue.innerHTML = hrsFlipCard.n;
+    hrsFlipCard.lowValue.innerHTML = hrsFlipCard.n;
+    hrsFlipCard.backValue.innerHTML = nextNum(hrsFlipCard.n, hrsFlipCard.maxN);
+}
+
 /**
  * initialization.
  */
@@ -156,5 +201,11 @@ hrs.addEventListener('animationend', () => {
     } else {
         hrsFlipCard.singleFlipPostActions();
         hrsFlipCard.n = nextNum(hrsFlipCard.n, hrsFlipCard.maxN);
+    }
+});
+
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        syncTimeToSystem();
     }
 });
